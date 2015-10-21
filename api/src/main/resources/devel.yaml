@@ -1,0 +1,4 @@
+cellsMongoConfig:
+  urls:
+    - localhost:27017
+   database: cellTowers

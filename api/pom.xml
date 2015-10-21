@@ -1,0 +1,178 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.emaginalabs</groupId>
+    <artifactId>cell-tower-locator-restapi</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <parent>
+        <groupId>com.emaginalabs</groupId>
+        <artifactId>cell-tower-locator</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <properties>
+        <mainClass>com.emaginalabs.towerlocator.CellTowerLocatorServerMain</mainClass>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.emaginalabs</groupId>
+            <artifactId>cell-tower-locator-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- Finatra -->
+        <dependency>
+            <groupId>com.twitter.finatra</groupId>
+            <artifactId>finatra-http_${scala.sufix}</artifactId>
+            <version>${finatra.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.twitter.finatra</groupId>
+            <artifactId>finatra-slf4j_${scala.sufix}</artifactId>
+            <version>${finatra.version}</version>
+        </dependency>
+
+        <!-- Logback -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.0.13</version>
+        </dependency>
+
+        <!-- Test Deps -->
+        <dependency>
+            <groupId>com.twitter.finatra</groupId>
+            <artifactId>finatra-http_${scala.sufix}</artifactId>
+            <scope>test</scope>
+            <type>test-jar</type>
+            <version>${finatra.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.twitter.inject</groupId>
+            <artifactId>inject-modules_${scala.sufix}</artifactId>
+            <scope>test</scope>
+            <type>test-jar</type>
+            <version>${finatra.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.twitter.inject</groupId>
+            <artifactId>inject-app_${scala.sufix}</artifactId>
+            <scope>test</scope>
+            <type>test-jar</type>
+            <version>${finatra.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.twitter.inject</groupId>
+            <artifactId>inject-server_${scala.sufix}</artifactId>
+            <scope>test</scope>
+            <type>test-jar</type>
+            <version>${finatra.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>${project.artifactId}</finalName>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>src/main/webapp</directory>
+            </resource>
+        </resources>
+
+        <testResources>
+            <testResource>
+                <directory>config</directory>
+            </testResource>
+            <testResource>
+                <directory>src/test/resources</directory>
+            </testResource>
+            <testResource>
+                <directory>src/test/webapp</directory>
+            </testResource>
+        </testResources>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.3</version>
+                <configuration>
+                    <createDependencyReducedPom>true</createDependencyReducedPom>
+                    <filters>
+                        <filter>
+                            <artifact>*:*</artifact>
+                            <excludes>
+                                <exclude>META-INF/*.SF</exclude>
+                                <exclude>META-INF/*.DSA</exclude>
+                                <exclude>META-INF/*.RSA</exclude>
+                            </excludes>
+                        </filter>
+                    </filters>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>
+                                        ${mainClass}
+                                    </mainClass>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.4.0</version>
+                <configuration>
+                    <mainClass>${mainClass}</mainClass>
+                    <systemProperties>
+                        <systemProperty>
+                            <key>log.access.output</key>
+                            <value>/dev/stdout</value>
+                        </systemProperty>
+                        <systemProperty>
+                            <key>log.service.output</key>
+                            <value>/dev/stdout</value>
+                        </systemProperty>
+                    </systemProperties>
+                    <arguments>
+                        <argument>-log.output=/dev/stdout</argument>
+                        <argument>-http.port=:8080</argument>
+                        <argument>-admin.port=:8081</argument>
+                    </arguments>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>twitter-repo</id>
+            <name>twitter-repo</name>
+            <url>https://maven.twttr.com</url>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>twitter-repo</id>
+            <name>twitter-repo</name>
+            <url>https://maven.twttr.com</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+</project>
