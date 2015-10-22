@@ -25,7 +25,6 @@
             <artifactId>reactivemongo_${scala.sufix}</artifactId>
             <version>0.11.7</version>
         </dependency>
-
     </dependencies>
 
 </project>

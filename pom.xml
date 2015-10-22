@@ -35,12 +35,6 @@
             <artifactId>joda-time</artifactId>
             <version>2.8.2</version>
         </dependency>
-
-        <dependency>
-            <groupId>com.emaginalabs</groupId>
-            <artifactId>config-provider-core</artifactId>
-            <version>1.0.0</version>
-        </dependency>
         <dependency>
             <groupId>com.twitter.inject</groupId>
             <artifactId>inject-core_${scala.sufix}</artifactId>

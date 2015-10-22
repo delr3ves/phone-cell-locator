@@ -31,5 +31,4 @@ project/plugins/project/
 .scala_dependencies
 .worksheet
 
-
-*/depenedency-reduced-pom.xml
+dependency-reduced-pom.xml

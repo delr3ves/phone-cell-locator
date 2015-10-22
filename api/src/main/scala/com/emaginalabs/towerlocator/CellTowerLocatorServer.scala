@@ -1,5 +1,6 @@
 package com.emaginalabs.towerlocator
 
+import com.emaginalabs.towerlocator.business.config.{MongoConfig, CellTowerLocatorConfig}
 import com.emaginalabs.towerlocator.business.di.CellTowerLocatorModule
 import com.emaginalabs.towerlocator.controller.{FindCellController, UserController}
 import com.twitter.finagle.httpx.{Request, Response}
@@ -15,7 +16,14 @@ class CellTowerLocatorServer extends HttpServer {
 
   val fileFlag = flag("configFile", "", "Configuration File")
 
-  override def modules = Seq(Slf4jBridgeModule, new CellTowerLocatorModule(fileFlag))
+  override def modules = {
+    val config: CellTowerLocatorConfig = new CellTowerLocatorConfig(
+      cellsMongoConfig = new MongoConfig(List("localhost:27017"), "cellTower")
+    )
+    Seq(Slf4jBridgeModule, new CellTowerLocatorModule(
+      config
+    ))
+  }
 
   override def configureHttp(router: HttpRouter) {
     router
