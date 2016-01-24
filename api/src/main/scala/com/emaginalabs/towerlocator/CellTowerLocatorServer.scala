@@ -18,7 +18,7 @@ class CellTowerLocatorServer extends HttpServer {
 
   override def modules = {
     val config: CellTowerLocatorConfig = new CellTowerLocatorConfig(
-      cellsMongoConfig = new MongoConfig(List("localhost:27017"), "cellTower")
+      cellsMongoConfig = new MongoConfig(List("localhost:2701 7"), "cellTower")
     )
     Seq(Slf4jBridgeModule, new CellTowerLocatorModule(
       config

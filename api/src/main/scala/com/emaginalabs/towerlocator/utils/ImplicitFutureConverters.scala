@@ -8,7 +8,7 @@ import language.implicitConversions
 /**
  * @author Sergio Arroyo - @delr3ves
  */
-class ImplicitFutureConverters {
+object ImplicitFutureConverters {
 
   implicit def scalaToTwitterTry[T](t: Try[T]): twitter.Try[T] = t match {
     case Success(r) => twitter.Return(r)
@@ -33,3 +33,25 @@ class ImplicitFutureConverters {
   }
 
 }
+
+//
+//import com.twitter.util.{Future => TwitterF, Promise => TwitterP}
+//import scala.concurrent.{Future => ScalaF, Promise => ScalaP}
+//
+//object TwitterFutureSupport {
+//  /**
+//  Implicit conversion from a Twitter Future to a Scala Future
+//    **/
+//  implicit def twitterFutureToScalaFuture[T](twitterF: TwitterF[T]): ScalaF[T] = {
+//    val scalaP = ScalaP[T]
+//    twitterF.onSuccess { r: T =>
+//      scalaP.success(r)
+//    }
+//    twitterF.onFailure { e: Throwable =>
+//      scalaP.failure(e)
+//    }
+//    scalaP.future
+//  }
+//
+//}
+

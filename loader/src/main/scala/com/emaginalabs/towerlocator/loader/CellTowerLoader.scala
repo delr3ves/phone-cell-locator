@@ -11,6 +11,9 @@ import org.apache.spark.rdd.RDD
 import org.joda.time.DateTime
 import org.slf4j.LoggerFactory
 
+import scala.concurrent.{Await, Future}
+import scala.concurrent.duration.DurationInt
+
 /**
  * @author Sergio Arroyo - @delr3ves
  */
@@ -45,6 +48,7 @@ class CellTowerLoader @Inject()(config: CellTowerLocatorConfig,
   private def storeCell(cell: CellInfo) {
     val injector = InjectorFactory getInstance(appName, isLocal, config)
     val service = injector getInstance (classOf[CellTowerService])
-    service createCell (cell)
+    val eventualInfo: Future[CellInfo] = service createCell (cell)
+    Await.result[CellInfo](eventualInfo, 1 seconds)
   }
 }

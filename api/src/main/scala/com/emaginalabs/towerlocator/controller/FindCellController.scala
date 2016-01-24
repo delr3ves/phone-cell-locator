@@ -7,8 +7,8 @@ import com.emaginalabs.towerlocator.business.service.CellTowerService
 import com.twitter.finagle.httpx.Request
 import com.twitter.finatra.http.Controller
 
+import com.emaginalabs.towerlocator.utils.ImplicitFutureConverters
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
 
 class FindCellController @Inject()(cellTowerService: CellTowerService) extends Controller {
 
@@ -16,19 +16,10 @@ class FindCellController @Inject()(cellTowerService: CellTowerService) extends C
     val mcc = request.params.getIntOrElse("mcc", 0)
     val net = request.params.getIntOrElse("net", 0)
 
-    val futureCell: Future[Option[CellInfo]] = cellTowerService.findCell(mcc, net)
-
-    futureCell.map {
-      case Some(cell) => response.ok.json(cell)
-      case None => response.notFound()
-    }
+    ImplicitFutureConverters.scalaToTwitterFuture(cellTowerService.findCell(mcc, net))
   }
 
   post("/tower") { cellInfo: CellInfo =>
-    val futureCell: Future[CellInfo] = cellTowerService.createCell(cellInfo)
-
-    futureCell.map {
-      case _ => response.ok.json(_)
-    }
+    ImplicitFutureConverters.scalaToTwitterFuture(cellTowerService.createCell(cellInfo))
   }
 }
